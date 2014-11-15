@@ -7,7 +7,7 @@
 #include <stdio.h>
 
 #define SOCKET_ERROR        -1
-#define BUFFER_SIZE         5
+#define BUFFER_SIZE         100
 #define HOST_NAME_SIZE      20
 
 int  main(int argc, char* argv[])
@@ -22,6 +22,7 @@ int  main(int argc, char* argv[])
     int nHostPort;
     printf("Enter Host: ");
     scanf("%s",strHostName);
+    printf("Enter Port: ");
     scanf("%d", &nHostPort);
     
     
@@ -31,7 +32,7 @@ int  main(int argc, char* argv[])
     
     if(hSocket == SOCKET_ERROR)
     {
-        printf("\nCould not make a socket\n");
+        printf("\nCould not make a socket");
         return 0;
     }
 
@@ -46,8 +47,6 @@ int  main(int argc, char* argv[])
     Address.sin_port=htons(nHostPort);
     Address.sin_family=AF_INET;
 
-    printf("Made it to port: %d",nHostPort);
-
     /* connect to host */
     if(connect(hSocket,(struct sockaddr*)&Address,sizeof(Address))
        == SOCKET_ERROR)
@@ -55,18 +54,19 @@ int  main(int argc, char* argv[])
         printf("\nCould not connect to host\n");
         return 0;
     }
+    printf("\nConnected to port: %d",nHostPort);
     
     /* read from socket into buffer
      ** number returned by read() and write() is the number of bytes
      ** read or written, with -1 being that an error occured */
     char sendMessage[] = "grandmother(liz,chas).";
+    
+    printf("\nSending \"%s\" to port 7777",sendMessage);
     write(hSocket,sendMessage, strlen(sendMessage));
     
     nReadAmount=read(hSocket,pBuffer,BUFFER_SIZE);
-    int i = 0;
-    while(pBuffer[i] != NULL){
-        i++;
-    }
+    //char * buffer = "";
+    //strcpy(buffer, pBuffer);
     printf("\nReceived \"%s\" from server\n",pBuffer);
     /* write what we received back to the server */
     
